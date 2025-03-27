@@ -8,6 +8,8 @@ struct NO {
 };
 
 NO* primeiro = NULL;
+NO* ultimo = NULL;
+
 
 // headers
 void menu();
@@ -114,31 +116,50 @@ void exibirElementos()
 
 void inserirElemento()
 {
-	// aloca memoria dinamicamente para o novo elemento
+	int num;
+	cout << "Digite um numero: ";
+	cin >> num;
+
 	NO* novo = (NO*)malloc(sizeof(NO));
-	if (novo == NULL)
-	{
+	if (novo == NULL) return;
+
+	novo->valor = num;
+	novo->prox = NULL;
+
+	if (primeiro == NULL) {
+		primeiro = novo;
+		ultimo = novo;
 		return;
 	}
 
-	cout << "Digite o elemento: ";
-	cin >> novo->valor;
-	novo->prox = NULL;
+	NO* atual = primeiro;
+	NO* anterior = NULL;
 
-	if (primeiro == NULL)
-	{
+	while (atual != NULL && atual->valor < num) {
+		anterior = atual;
+		atual = atual->prox;
+	}
+
+	if (atual != NULL && atual->valor == num) {
+		cout << "Numero já existente\n";
+		free(novo);
+		return;
+	}
+
+	if (anterior == NULL) {
+		novo->prox = primeiro;
 		primeiro = novo;
 	}
-	else
-	{
-		// procura o final da lista
-		NO* aux = primeiro;
-		while (aux->prox != NULL) {
-			aux = aux->prox;
-		}
-		aux->prox = novo;
+	else {
+		anterior->prox = novo;
+		novo->prox = atual;
+	}
+
+	if (novo->prox == NULL) {
+		ultimo = novo;
 	}
 }
+
 
 void excluirElemento()
 {
